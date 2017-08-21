@@ -1,0 +1,85 @@
+﻿@model IEnumerable<FileUploader.Models.FileItem>
+
+@{
+    // this is for the page title in the browser
+    ViewBag.Title = "Home Page";
+}
+
+<script>
+    // This script runs in the browser itself.
+    // Whenever the user clicks delete of a file
+    function deleteFile(fileName) {
+        // make sure a fileName was passed in
+        // confirm('') pops up a confirmation window, and returns true or false depending
+        // on the user choice
+        if (fileName && axios && confirm('Are you sure you want to delete ' + fileName)) {
+            // find the spinner element (look below for <div id="spinner">)
+            var element = document.getElementById('spinner');
+            if (element) {
+                // display for the spinner is 'none' which means hidden
+                // setting it to 'block' will make it show
+                element.style.display = 'block';
+            }
+
+            axios
+                .delete('/Delete/' + fileName)
+                .then(function (response) {
+                    // After delete is successful
+                    location.reload();
+                })
+                .catch(function (error) {
+                    // After there was an error in delete
+                    console.error(error);
+                    location.reload();
+                });
+        }
+    }
+</script>
+
+<!-- this is the file upload part -->
+<div class="row align-items-center justify-content-lg-center">
+    <div style="margin-top: 50px">
+        <form action="/UploadFile" method="post" enctype="multipart/form-data">
+            <input type="file" name="file" id="file" class="btn btn-secondary-success btn-lg btn-block" />
+            <input type="submit" class="btn btn-outline-success btn-lg btn-block" value="Upload!" />
+        </form>
+    </div>
+</div>
+
+<!-- this is the table part -->
+<div class="row align-items-center justify-content-lg-center">
+    <div class="col" style="margin-top: 50px">
+        <table class="table table-hover">
+            <thead>
+                <tr class="thead-inverse">
+                    <th>#</th>
+                    <th>File Name</th>
+                    <th>Link</th>
+                    <th>Delete</th>
+                    <th>Uploader</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var file in Model)
+                {
+                    <tr>
+                        <th scope="row">@file.Id</th>
+                        <td>@file.Name</td>
+                        <td><a href="@file.Uri">Download</a></td>
+                        <td><a href="#" onclick="deleteFile('@file.Name');">Delete</a></td>
+                        <td>Someone ibn Someone</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- this is the spinner for busy state while uploading -->
+<div id="spinner" style="display: none">
+    <div class="fxs-progress">
+        <div class="fxs-progress-dots">
+            <div></div><div></div><div></div>
+        </div>
+    </div>
+</div>

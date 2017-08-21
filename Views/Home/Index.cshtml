@@ -34,6 +34,15 @@
                 });
         }
     }
+
+    function copyToClipboard(text) {
+        var textField = document.createElement('textarea');
+        textField.innerText = text;
+        document.body.appendChild(textField);
+        textField.select();
+        document.execCommand('copy');
+        textField.remove();
+    }
 </script>
 
 <!-- this is the file upload part -->
@@ -55,6 +64,7 @@
                     <th>#</th>
                     <th>File Name</th>
                     <th>Link</th>
+                    <th>Copy Download</th>
                     <th>Delete</th>
                     <th>Uploader</th>
                 </tr>
@@ -66,6 +76,7 @@
                         <th scope="row">@file.Id</th>
                         <td>@file.Name</td>
                         <td><a href="@file.Uri">Download</a></td>
+                        <td><button class="btn btn-outline-info" style="cursor: pointer" onclick="copyToClipboard('@file.Uri')" ><i class="fa fa-clone"></i></button></td>
                         <td><a href="#" onclick="deleteFile('@file.Name');">Delete</a></td>
                         <td>Someone ibn Someone</td>
                     </tr>
